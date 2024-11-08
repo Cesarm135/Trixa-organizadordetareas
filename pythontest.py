@@ -1,5 +1,5 @@
-test = ["a", "b", "c"]
-x, y, z = test
-print(x)
-print(y)
-print(z)
+configtask = "Hola"
+
+f = open("test.txt", "w")
+f.write(configtask)
+f.close()
