@@ -1,12 +1,7 @@
 [
     {
-        "name": "hola",
+        "name": "tarea1",
         "estado": "Pendiente",
-        "numero": 1
-    },
-    {
-        "name": "wajsidasdas",
-        "estado": "Pendiente",
-        "numero": 2
+        "numero": 4
     }
 ]
