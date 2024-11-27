@@ -1,1 +1,1 @@
-Calcuadora para Proyecto Personal.
+Lista de tareas para Proyecto Personal.
