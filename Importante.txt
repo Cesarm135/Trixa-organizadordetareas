@@ -1,23 +1,14 @@
 Crea una aplicación de lista de tareas donde los usuarios puedan agregar, editar, marcar como completadas o eliminar tareas. Esto te permitirá trabajar con elementos visuales y datos persistentes, y puedes expandirlo en el tiempo con más funcionalidades.
 
-Funcionalidades Básicas:
-Agregar tareas: El usuario puede escribir una nueva tarea y agregarla a la lista.
+Funcionalidades pensadas para el programa (en orden de prioridad):
+Agregar tareas: El usuario puede escribir una nueva tarea y agregarla a la	lista.
 Eliminar tareas: Opción para eliminar tareas de la lista.
 Marcar tareas como completadas: Tareas completadas se tachan o cambian de color.
 Guardar las tareas en un archivo: Para que al cerrar y abrir la aplicación, las tareas anteriores se mantengan.
-Funcionalidades Avanzadas (opcional para más tiempo):
 Edición de tareas existentes.
 Filtrado por estado de la tarea (completada/no completada).
 Añadir fechas límite para las tareas.
 Notificaciones o recordatorios.
-Sincronización con una base de datos o almacenamiento en la nube.
+Sistema de organización de tareas basadas en el tiempo que tienes disponible, cuando añades una tarea, te pedirá cuánto tiempo necesitas para esa tarea y al querer empezar a hacer tareas, elegir el tiempo que tienes disponible y se te organizaran las tareas automáticamente.
+Añadir sistema de reconocimiento de voz.
 
-Recursos para aprender Tkinter:
-Documentación oficial de Tkinter:
-https://docs.python.org/3/library/tkinter.html
-
-Tkinter tutoriales en YouTube (sentdex):
-sentdex Tkinter Playlist
-
-Real Python - Introducción a Tkinter:
-https://realpython.com/python-gui-tkinter/
