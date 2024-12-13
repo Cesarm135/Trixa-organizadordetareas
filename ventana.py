@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import PhotoImage
 from pathlib import Path
+import time
 ventana = tk.Tk()
 
 ventana.title("To-DoList PAI")
@@ -11,19 +12,27 @@ icono = PhotoImage(file=str(icono_ruta))
 ventana.iconphoto(False, icono)
 ventana.configure(bg="white")
 
+Numero = 1
 
-
-frame1 = tk.Frame(ventana)
-frame1.configure(width=300, height=200, bg="red", bd= "5") 
-frame2 = tk.Frame(frame1)
-frame2.configure(width=50, height=50, bg="yellow", bd= "5") 
-boton = tk.button(frame2, text="hola")
-frame2.pack()
-frame1.pack()
+etiqueta = tk.Label(ventana, text=Numero)
+etiqueta.configure(fg="black", bg="white", font=("Arial", 34, "bold"))
+etiqueta.after(1000)
+etiqueta.pack()
 
 
 
+def botonPress():
+    print("Hola")
+    global Numero
+    Numero += 2
 
+    etiqueta.configure(text=Numero)
+
+boton = tk.Button(text="Hola", bg="green", fg="white", font=("Arial", 24))
+boton.configure(command=botonPress)
+
+
+boton.pack()
 
 
 ventana.mainloop()
