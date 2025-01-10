@@ -3,6 +3,7 @@ from tkinter import PhotoImage
 from pathlib import Path
 import time
 import customtkinter
+from PIL import Image
 
 app = customtkinter.CTk()
 
@@ -31,9 +32,18 @@ tareaAANadir = ""
 frameanadirtarea = customtkinter.CTkFrame(frameprincipal, fg_color="transparent")
 frameanadirtarea.pack(padx=3, pady=3, anchor="nw")
 
+#Imagen Añadir
+addImage_ruta = Path(__file__).parent / "Media" / "add.png"
+addImage = customtkinter.CTkImage(light_image=Image.open(addImage_ruta),
+                                  dark_image=Image.open(addImage_ruta),
+                                  size=(25, 25))
+
+addImageLabel = customtkinter.CTkLabel(frameanadirtarea, image=addImage, text="")
+addImageLabel.pack(side="left")
+
 # Texto para añadir tarea
-textotarea = customtkinter.CTkEntry(frameanadirtarea, placeholder_text="Escriba su tarea")
-textotarea.pack(anchor="nw", side="left")
+textotarea = customtkinter.CTkEntry(frameanadirtarea, placeholder_text="Escriba su tarea", font=("Catamaran", 12), height=25, fg_color="transparent")
+textotarea.pack(side="left", padx= 3)
 
 #Anadir tarea boton
 def addTask():
@@ -41,10 +51,17 @@ def addTask():
     print("Añadiendo tarea: " + textotarea.get())
     textotarea.delete(0, customtkinter.END)
 
-button1 = customtkinter.CTkButton(frameanadirtarea, text="Añadir Tarea", command=addTask, width=20, height=20, fg_color="lime green")
-button1.pack(padx=12, pady=6, anchor="nw", side="right")
+buttonAddTask = customtkinter.CTkButton(frameanadirtarea, text="Añadir Tarea", command=addTask, width=30, height=25, fg_color="lime green", font=("Catamaran", 12))
+buttonAddTask.pack(padx=4, anchor="n", side="left")
 
 # Lista de tareas
-listaTareas = customtkinter.CTkFrame(frameprincipal, fg_color="green", height="90")
-listaTareas.pack(anchor="nw", fill="x")
+listaTareas = customtkinter.CTkFrame(frameprincipal, fg_color="green")
+listaTareas.pack(anchor="nw", fill="both")
+
+
+
+
+
+
+
 app.mainloop()
