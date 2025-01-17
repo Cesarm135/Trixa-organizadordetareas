@@ -20,14 +20,13 @@ tareas_ruta = Path(__file__).parent / "Data" / "tareas.json"
 app.after(201, lambda :app.iconbitmap(icono_ruta))
 customtkinter.set_default_color_theme("green")
 
+#Tareas que hacer texto:
+label1 = customtkinter.CTkLabel(app, text="Tareas que hacer:", fg_color="transparent", text_color="black", anchor="nw", font=("Catamaran", 30))
+label1.pack(padx=12, pady=12, fill="x", side="top")
+
 #Frame tarea principal
 frameprincipal = customtkinter.CTkFrame(app)
-frameprincipal.pack(fill="both", expand=True, padx=20, pady=20, anchor="nw")
-
-
-#Tareas que hacer texto:
-label1 = customtkinter.CTkLabel(frameprincipal, text="Tareas que hacer:", fg_color="transparent", text_color="black", anchor="nw", width=10, height=10, font=("Catamaran", 30))
-label1.pack(padx=6, pady=6, fill="both")
+frameprincipal.pack(fill="both", expand=True, padx=10, pady=0, anchor="nw")
 
 #Añadir Tareas
 tareaAANadir = ""
@@ -51,7 +50,7 @@ textotarea.pack(side="left", padx= 3)
 
 # Lista de tareas
 listaTareas = customtkinter.CTkScrollableFrame(frameprincipal, fg_color="transparent")
-listaTareas.pack(anchor="nw", fill="both")
+listaTareas.pack(anchor="nw", fill="both", expand=True)
 
 def cargarTareas():
     if os.path.exists(tareas_ruta):  
@@ -61,6 +60,7 @@ def cargarTareas():
             except json.JSONDecodeError:
                 tareas = []
 
+        tareas.sort(key=lambda tarea: tarea["completada"] == "Completada")
         for tarea in tareas:
             mostrarTarea(tarea["tarea"], tarea["completada"])
 
@@ -76,12 +76,14 @@ def mostrarTarea(texto, completada):
     checkbox.pack(side="left", padx=5)
     if completada == "Completada":
         checkbox.select()
+        tarea_estilo = {"text_color": "gray", "font": ("Catamaran", 12, "overstrike")}
     else:
         checkbox.deselect()
+        tarea_estilo = {"text_color": "black", "font": ("Catamaran", 12)}
 
 # Tarea
     tarea_label = customtkinter.CTkLabel(
-        tarea_frame, text=texto, font=("Catamaran", 12), text_color="black"
+        tarea_frame, text=texto, **tarea_estilo
     )
     tarea_label.pack(side="left", padx=10)
 # Función para actualizar el estado de una tarea
@@ -102,6 +104,8 @@ def actualizarTarea(texto, checkbox):
     # Guardar los cambios en el archivo
     with open(tareas_ruta, "w") as file:
         json.dump(tareas, file, indent=4)
+
+    recargarInterfaz()
 
 # Función para añadir nueva tarea
 def addTask():
@@ -125,17 +129,25 @@ def addTask():
         tareas = []
 
     # Añadir nueva tarea
-    tareas.append(nueva_tarea)
+    tareas.insert(0, nueva_tarea)
 
     # Guardar en el archivo
     with open(tareas_ruta, "w") as file:
         json.dump(tareas, file, indent=4)
 
     # Mostrar en la interfaz
-    mostrarTarea(tareaAANadir, "Pendiente")
+    recargarInterfaz()
 
     # Limpiar entrada
     textotarea.delete(0, customtkinter.END)
+
+# Recagar interfaz
+def recargarInterfaz():
+    # Eliminar todos los widgets dentro de listaTareas
+    for widget in listaTareas.winfo_children():
+       widget.pack_forget()
+
+    cargarTareas()
 
 # Botón para añadir tarea
 buttonAddTask = customtkinter.CTkButton(
@@ -143,6 +155,20 @@ buttonAddTask = customtkinter.CTkButton(
     width=30, height=25, fg_color="lime green", font=("Catamaran", 12)
 )
 buttonAddTask.pack(padx=4, anchor="n", side="left")
+
+#Config Frame
+def abrirConfig():
+    ventana_config = customtkinter.CTkToplevel(app)
+    ventana_config.title("Configuracion")
+    ventana_config.geometry("600x400")
+    ventana_config.grab_set()
+    ventana_config.attributes("-topmost", True)
+# Botón config
+buttonConfig = customtkinter.CTkButton(
+    frameprincipal, text="Configuracion", command=abrirConfig,
+    width=50, height=40, fg_color="gray", font=("Catamaran", 15)
+)
+buttonConfig.pack(padx=5, pady=6, anchor="se", side="bottom")
 
 # Cargar tareas al iniciar
 cargarTareas()
