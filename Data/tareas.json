@@ -2,7 +2,7 @@
     {
         "tarea": "sdas",
         "fecha": "Sin definir",
-        "completada": "Completada"
+        "completada": "Pendiente"
     },
     {
         "tarea": "hola",
@@ -27,21 +27,21 @@
     {
         "tarea": "nb",
         "fecha": "Sin definir",
-        "completada": "Pendiente"
+        "completada": "Completada"
     },
     {
         "tarea": "asdsad",
         "fecha": "Sin definir",
-        "completada": "Pendiente"
+        "completada": "Completada"
     },
     {
         "tarea": "asdasd",
         "fecha": "Sin definir",
-        "completada": "Pendiente"
+        "completada": "Completada"
     },
     {
         "tarea": "asdas",
         "fecha": "Sin definir",
-        "completada": "Pendiente"
+        "completada": "Completada"
     }
 ]

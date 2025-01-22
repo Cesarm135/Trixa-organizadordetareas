@@ -21,7 +21,7 @@ app.after(201, lambda :app.iconbitmap(icono_ruta))
 customtkinter.set_default_color_theme("green")
 
 #Tareas que hacer texto:
-label1 = customtkinter.CTkLabel(app, text="Tareas que hacer:", fg_color="transparent", text_color="black", anchor="nw", font=("Catamaran", 30))
+label1 = customtkinter.CTkLabel(app, text="Lista de tareas:", fg_color="transparent", text_color="black", anchor="nw", font=("Catamaran", 30))
 label1.pack(padx=12, pady=12, fill="x", side="top")
 
 #Frame tarea principal
@@ -158,17 +158,35 @@ buttonAddTask.pack(padx=4, anchor="n", side="left")
 
 #Config Frame
 def abrirConfig():
+    configImage_ruta = Path(__file__).parent / "Media" / "config.ico"
     ventana_config = customtkinter.CTkToplevel(app)
     ventana_config.title("Configuracion")
-    ventana_config.geometry("600x400")
+    ventana_config.geometry("700x400")
     ventana_config.grab_set()
     ventana_config.attributes("-topmost", True)
+    ventana_config.after(201, lambda: ventana_config.iconbitmap(configImage_ruta))
+    labelconfig = customtkinter.CTkLabel(ventana_config, text="Configuracion:", fg_color="transparent", text_color="black", anchor="nw", font=("Catamaran", 20))
+    labelconfig.pack(padx=4, pady=4, fill="x")
+    # Frame ajustes izquierda
+    frameAjustesIzq = customtkinter.CTkFrame(ventana_config, fg_color="transparent", width=400)
+    frameAjustesIzq.pack(expand=True, side="left", anchor="nw", padx=4, fill="x")
+    state_recordarcorreo = customtkinter.StringVar(value="on")
+    switch_recordarcorreo = customtkinter.CTkSwitch(frameAjustesIzq, text="- Recordar tareas por correo electronico", variable=state_recordarcorreo, onvalue="on", offvalue="off")
+    switch_recordarcorreo.pack(anchor="nw")
+
+
+    # Frame ajustes derecha
+    frameAjustesDer = customtkinter.CTkFrame(ventana_config, fg_color="transparent")
+    frameAjustesDer.pack(expand=True, side="right", anchor="nw", padx=4, fill="x")
+
 # Botón config
 buttonConfig = customtkinter.CTkButton(
-    frameprincipal, text="Configuracion", command=abrirConfig,
+    app, text="Configuracion", command=abrirConfig,
     width=50, height=40, fg_color="gray", font=("Catamaran", 15)
 )
 buttonConfig.pack(padx=5, pady=6, anchor="se", side="bottom")
+
+
 
 # Cargar tareas al iniciar
 cargarTareas()
