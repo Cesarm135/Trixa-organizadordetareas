@@ -1,47 +1,22 @@
 [
     {
-        "tarea": "sdas",
+        "tarea": "jhgg",
+        "fecha": "Sin definir",
+        "completada": "Completada"
+    },
+    {
+        "tarea": "Hola",
         "fecha": "Sin definir",
         "completada": "Pendiente"
     },
     {
-        "tarea": "hola",
+        "tarea": "ejemplo 2",
         "fecha": "Sin definir",
         "completada": "Pendiente"
     },
     {
-        "tarea": "hola",
+        "tarea": "ejemplo 1",
         "fecha": "Sin definir",
-        "completada": "Completada"
-    },
-    {
-        "tarea": "pablo",
-        "fecha": "Sin definir",
-        "completada": "Completada"
-    },
-    {
-        "tarea": "dasd",
-        "fecha": "Sin definir",
-        "completada": "Completada"
-    },
-    {
-        "tarea": "nb",
-        "fecha": "Sin definir",
-        "completada": "Completada"
-    },
-    {
-        "tarea": "asdsad",
-        "fecha": "Sin definir",
-        "completada": "Completada"
-    },
-    {
-        "tarea": "asdasd",
-        "fecha": "Sin definir",
-        "completada": "Completada"
-    },
-    {
-        "tarea": "asdas",
-        "fecha": "Sin definir",
-        "completada": "Completada"
+        "completada": "Pendiente"
     }
 ]

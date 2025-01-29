@@ -6,6 +6,9 @@ import customtkinter
 from PIL import Image
 import json
 import os
+from tkcalendar import Calendar
+from datetime import datetime
+from datetime import date
 app = customtkinter.CTk()
 
 # Ajustes app
@@ -46,6 +49,31 @@ addImageLabel.pack(side="left")
 textotarea = customtkinter.CTkEntry(frameanadirtarea, placeholder_text="Escriba su tarea", font=("Catamaran", 12), height=25, fg_color="transparent")
 textotarea.pack(side="left", padx= 3)
 
+# Calendario boton
+image_rutaCalendario = Path(__file__).parent / "Media" / "calendario.png"
+imagenCalendario = customtkinter.CTkImage(light_image=Image.open(image_rutaCalendario),
+                                  dark_image=Image.open(image_rutaCalendario),
+                                  size=(20, 20))
+
+# Función del botón
+def calendario_boton():
+    image_RutaCalendarioICO_ruta = Path(__file__).parent / "Media" / "calendario.ico"
+    ventana_calendario = customtkinter.CTkToplevel(app)
+    ventana_calendario.title("Seleccionar fecha:")
+    ventana_calendario.geometry("250x200")
+    ventana_calendario.grab_set()
+    ventana_calendario.attributes("-topmost", True)
+    ventana_calendario.after(200, lambda: ventana_calendario.iconbitmap(image_RutaCalendarioICO_ruta))
+    #Calendario
+    today = date.today()
+    calendario = Calendar(ventana_calendario, selectmode="day", year=2024, month=1, day=today.day)
+    calendario.pack(side="top")
+
+# Crear botón con imagen
+button_image = customtkinter.CTkButton(master=frameanadirtarea, image=imagenCalendario, text="", 
+                                       fg_color="transparent", hover_color="gray",
+                                       command=calendario_boton, width=25)
+button_image.pack(anchor="nw", padx=2, side="left")
 
 
 # Lista de tareas
@@ -154,7 +182,7 @@ buttonAddTask = customtkinter.CTkButton(
     frameanadirtarea, text="Añadir Tarea", command=addTask,
     width=30, height=25, fg_color="lime green", font=("Catamaran", 12)
 )
-buttonAddTask.pack(padx=4, anchor="n", side="left")
+buttonAddTask.pack(padx=2, anchor="n", side="left")
 
 #Config Frame
 def abrirConfig():
