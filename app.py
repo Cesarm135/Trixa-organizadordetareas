@@ -60,14 +60,26 @@ def calendario_boton():
     image_RutaCalendarioICO_ruta = Path(__file__).parent / "Media" / "calendario.ico"
     ventana_calendario = customtkinter.CTkToplevel(app)
     ventana_calendario.title("Seleccionar fecha:")
-    ventana_calendario.geometry("250x200")
-    ventana_calendario.grab_set()
+    ventana_calendario.geometry("250x215")
+    # ventana_calendario.grab_set()
     ventana_calendario.attributes("-topmost", True)
     ventana_calendario.after(200, lambda: ventana_calendario.iconbitmap(image_RutaCalendarioICO_ruta))
     #Calendario
     today = date.today()
-    calendario = Calendar(ventana_calendario, selectmode="day", year=2024, month=1, day=today.day)
-    calendario.pack(side="top")
+    calendario = Calendar(ventana_calendario, selectmode="day", year=datetime.now().year, month=datetime.now().month, day=today.day, font=("Catamaran"), locale="es_ES", background="transparent")
+    calendario.pack(side="top", anchor="n")
+    #Boton de seleccionar fecha
+    def confirmarFecha():
+        fechaSeleccionada = calendario.get_date()
+        print(fechaSeleccionada)
+        ventana_calendario.destroy()
+    seleccionar_fecha = customtkinter.CTkButton(ventana_calendario, text="Hecho", command=confirmarFecha, font=("Catamaran", 12), fg_color="lime green", width=123)
+    seleccionar_fecha.pack(padx=2, side="right", anchor="se")
+     #Boton cancelar
+    def cancelarFecha():
+        ventana_calendario.destroy()
+    cancelar_fecha = customtkinter.CTkButton(ventana_calendario, text="Cancelar", command=cancelarFecha, font=("Catamaran", 12), fg_color="transparent", width=123, text_color="lime green", hover_color="pale green")
+    cancelar_fecha.pack(padx=2, anchor="s", side="left")
 
 # Crear botón con imagen
 button_image = customtkinter.CTkButton(master=frameanadirtarea, image=imagenCalendario, text="", 
