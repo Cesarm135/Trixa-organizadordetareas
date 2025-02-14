@@ -77,8 +77,12 @@ def calendario_boton():
     def confirmarFecha():
         fechaSeleccionada = calendario.get_date()
         ventana_calendario.destroy()
+        global fechaSeleccionadaTarea
+        fechaSeleccionadaTarea = fechaSeleccionada
+        
     seleccionar_fecha = customtkinter.CTkButton(ventana_calendario, text="Hecho", command=confirmarFecha, font=("Catamaran", 12), fg_color="lime green", width=123)
     seleccionar_fecha.pack(padx=2, anchor="se", side="left")
+
      #Boton cancelar
     def cancelarFecha():
         ventana_calendario.destroy()
@@ -97,6 +101,7 @@ listaTareas = customtkinter.CTkScrollableFrame(frameprincipal, fg_color="transpa
 listaTareas.pack(anchor="nw", fill="both", expand=True)
 
 def cargarTareas():
+    global tareas
     if os.path.exists(tareas_ruta):  
         with open(tareas_ruta, "r") as file:
             try:
@@ -104,11 +109,17 @@ def cargarTareas():
             except json.JSONDecodeError:
                 tareas = []
 
-        tareas.sort(key=lambda tarea: tarea["completada"] == "Completada")
-        for tarea in tareas:
-            mostrarTarea(tarea["tarea"], tarea["completada"])
+        def obtener_fecha(tarea):
+            try:
+                return datetime.strptime(tarea["fecha"], "%d/%m/%Y")
+            except (KeyError, ValueError):
+                return datetime.max  # Si la fecha no existe o está mal, la manda al final
 
-def mostrarTarea(texto, completada):
+        tareas.sort(key=lambda tarea: (tarea["completada"] == "Completada", obtener_fecha(tarea)))
+        for tarea in tareas:
+            mostrarTarea(tarea["tarea"], tarea["completada"], tarea["fecha"])
+
+def mostrarTarea(texto, completada, fecha):
     # Contenedor para la tarea
     tarea_frame = customtkinter.CTkFrame(listaTareas, fg_color="white", corner_radius=5)
     tarea_frame.pack(fill="x", pady=5, padx=10)
@@ -130,6 +141,10 @@ def mostrarTarea(texto, completada):
         tarea_frame, text=texto, **tarea_estilo
     )
     tarea_label.pack(side="left", padx=10)
+    fecha_label = customtkinter.CTkLabel(
+    tarea_frame, text=fecha, text_color="gray", font=("Catamaran", 10)
+)
+    fecha_label.pack(side="right", padx=10)
 # Función para actualizar el estado de una tarea
 def actualizarTarea(texto, checkbox):
     # Leer archivo JSON
@@ -153,12 +168,16 @@ def actualizarTarea(texto, checkbox):
 
 # Función para añadir nueva tarea
 def addTask():
+    global fechaSeleccionadaTarea
     tareaAANadir = textotarea.get().strip()
     if not tareaAANadir:
         print("La tarea no puede estar vacía.")
         return
 
-    fecha = seleccionar_fecha().fechaSeleccionada
+    if "fechaSeleccionadaTarea" not in globals():
+        fechaSeleccionadaTarea = "" 
+
+    fecha = fechaSeleccionadaTarea  
     nueva_tarea = {
         "tarea": tareaAANadir,
         "fecha": fecha,
@@ -184,6 +203,7 @@ def addTask():
 
     # Limpiar entrada
     textotarea.delete(0, customtkinter.END)
+    del fechaSeleccionadaTarea
 
 # Recagar interfaz
 def recargarInterfaz():
@@ -218,7 +238,16 @@ def abrirConfig():
     switch_recordarcorreo = customtkinter.CTkSwitch(frameAjustesIzq, text="- Recordar tareas por correo electronico", variable=state_recordarcorreo, onvalue="on", offvalue="off")
     switch_recordarcorreo.pack(anchor="nw")
 
+    def eliminarTareasCompletadas():
+        global tareas 
+        tareas = [tarea for tarea in tareas if tarea["completada"] != "Completada"]
+        with open(tareas_ruta, "w") as file:
+            json.dump(tareas, file, indent=4) 
+        recargarInterfaz()  
 
+    eliminarBoton = customtkinter.CTkButton(frameAjustesIzq, text="Borrar tareas completadas", command=eliminarTareasCompletadas,
+    width=30, height=25, fg_color="red", font=("Catamaran", 12), text_color="white", hover_color="red4")
+    eliminarBoton.pack(anchor="n", side="bottom", padx=3, pady=20)
     # Frame ajustes derecha
     frameAjustesDer = customtkinter.CTkFrame(ventana_config, fg_color="transparent")
     frameAjustesDer.pack(expand=True, side="right", anchor="nw", padx=4, fill="x")

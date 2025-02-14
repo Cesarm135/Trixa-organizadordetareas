@@ -1,22 +1,22 @@
 [
     {
-        "tarea": "jhgg",
-        "fecha": "Sin definir",
-        "completada": "Completada"
-    },
-    {
-        "tarea": "Hola",
-        "fecha": "Sin definir",
+        "tarea": "adios",
+        "fecha": "",
         "completada": "Pendiente"
     },
     {
-        "tarea": "ejemplo 2",
-        "fecha": "Sin definir",
+        "tarea": "hola123",
+        "fecha": "18/2/25",
         "completada": "Pendiente"
     },
     {
-        "tarea": "ejemplo 1",
-        "fecha": "Sin definir",
+        "tarea": "asdsad",
+        "fecha": "26/3/25",
+        "completada": "Pendiente"
+    },
+    {
+        "tarea": "asdasd",
+        "fecha": "",
         "completada": "Pendiente"
     }
 ]
