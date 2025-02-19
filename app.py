@@ -21,6 +21,7 @@ app.geometry("920x520")
 app.minsize(width=920, height=520)
 icono_ruta = Path(__file__).parent / "Media" / "icono.ico"
 tareas_ruta = Path(__file__).parent / "Data" / "tareas.json"
+info_ruta = Path(__file__).parent / "Data" / "info.json"
 app.after(201, lambda :app.iconbitmap(icono_ruta))
 customtkinter.set_default_color_theme("green")
 
@@ -111,9 +112,13 @@ def cargarTareas():
 
         def obtener_fecha(tarea):
             try:
-                return datetime.strptime(tarea["fecha"], "%d/%m/%Y")
+                fecha_str = tarea["fecha"]
+                if len(fecha_str.split("/")[-1]) == 2:  # Si el año tiene solo 2 dígitos
+                    return datetime.strptime(fecha_str, "%d/%m/%y")
+                return datetime.strptime(fecha_str, "%d/%m/%Y")
             except (KeyError, ValueError):
-                return datetime.max  # Si la fecha no existe o está mal, la manda al final
+                return datetime.max  # Si hay un error, la manda al final
+
 
         tareas.sort(key=lambda tarea: (tarea["completada"] == "Completada", obtener_fecha(tarea)))
         for tarea in tareas:
@@ -220,6 +225,25 @@ buttonAddTask = customtkinter.CTkButton(
 )
 buttonAddTask.pack(padx=2, anchor="n", side="left")
 
+
+
+#Guardar correo:
+def guardar_correo():
+    correo = entryCorreo.get()
+    if correo:  
+        with open(info_ruta, "w") as file:
+            json.dump({"correo": correo}, file, indent=4)
+
+def cargar_correo():
+    if info_ruta.exists():
+        with open(info_ruta, "r") as file:
+            try:
+                data = json.load(file)
+                return data.get("correo", "")
+            except json.JSONDecodeError:
+                return ""
+    return ""
+
 #Config Frame
 def abrirConfig():
     configImage_ruta = Path(__file__).parent / "Media" / "config.ico"
@@ -232,32 +256,50 @@ def abrirConfig():
     labelconfig = customtkinter.CTkLabel(ventana_config, text="Configuracion:", fg_color="transparent", text_color="black", anchor="nw", font=("Catamaran", 20))
     labelconfig.pack(padx=4, pady=4, fill="x")
     # Frame ajustes izquierda
-    frameAjustesIzq = customtkinter.CTkFrame(ventana_config, fg_color="transparent", width=400)
-    frameAjustesIzq.pack(expand=True, side="left", anchor="nw", padx=4, fill="x")
+    frameAjustesIzq = customtkinter.CTkFrame(ventana_config, fg_color="transparent", width=400, height=350)
+    frameAjustesIzq.pack(expand=True, side="left", anchor="nw", padx=4, pady=4, fill="x")
     state_recordarcorreo = customtkinter.StringVar(value="on")
     switch_recordarcorreo = customtkinter.CTkSwitch(frameAjustesIzq, text="- Recordar tareas por correo electronico", variable=state_recordarcorreo, onvalue="on", offvalue="off")
-    switch_recordarcorreo.pack(anchor="nw")
+    switch_recordarcorreo.pack(anchor="nw", padx=4, pady=4)
 
-    def eliminarTareasCompletadas():
+    
+    # Frame ajustes derecha
+    frameAjustesDer = customtkinter.CTkFrame(ventana_config, fg_color="gray84")
+    frameAjustesDer.pack(expand=True, side="right", anchor="nw", padx=4, fill="x")
+    #Correo electronico
+    labelcorreo = customtkinter.CTkLabel(frameAjustesDer, text="Correo electronico:", fg_color="transparent", text_color="black", anchor="nw", font=("Catamaran", 15, "bold"))
+    labelcorreo.pack(padx=4, pady=2, anchor="n")
+
+    #Entry correo
+    entryCorreo = customtkinter.CTkEntry(frameAjustesDer, placeholder_text="ejemplo@ejemplo.com", width=200, font=("Catamaran", 12))
+    entryCorreo.pack(pady=0)
+
+    entryCorreo.insert(0, cargar_correo())
+    entryCorreo.bind("<KeyRelease>", lambda event: guardar_correo())
+
+#Frame botones abajo
+frameBotones = customtkinter.CTkFrame(app, fg_color="transparent")
+frameBotones.pack(anchor="se", side="bottom")
+#Eliminar boton
+def eliminarTareasCompletadas():
         global tareas 
         tareas = [tarea for tarea in tareas if tarea["completada"] != "Completada"]
         with open(tareas_ruta, "w") as file:
             json.dump(tareas, file, indent=4) 
         recargarInterfaz()  
 
-    eliminarBoton = customtkinter.CTkButton(frameAjustesIzq, text="Borrar tareas completadas", command=eliminarTareasCompletadas,
-    width=30, height=25, fg_color="red", font=("Catamaran", 12), text_color="white", hover_color="red4")
-    eliminarBoton.pack(anchor="n", side="bottom", padx=3, pady=20)
-    # Frame ajustes derecha
-    frameAjustesDer = customtkinter.CTkFrame(ventana_config, fg_color="transparent")
-    frameAjustesDer.pack(expand=True, side="right", anchor="nw", padx=4, fill="x")
+eliminarBoton = customtkinter.CTkButton(frameBotones, text="Borrar tareas completadas", command=eliminarTareasCompletadas,
+width=50, height=40, fg_color="red", font=("Catamaran", 15), text_color="white", hover_color="red4")
+eliminarBoton.pack(anchor="se", padx=5, pady=5, side="left")
+
+    
 
 # Botón config
 buttonConfig = customtkinter.CTkButton(
-    app, text="Configuracion", command=abrirConfig,
+    frameBotones, text="Configuracion", command=abrirConfig,
     width=50, height=40, fg_color="gray", font=("Catamaran", 15)
 )
-buttonConfig.pack(padx=5, pady=6, anchor="se", side="bottom")
+buttonConfig.pack(padx=5, pady=5, anchor="s", side="right")
 
 
 

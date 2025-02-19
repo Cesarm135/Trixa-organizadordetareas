@@ -1,22 +1,17 @@
 [
     {
-        "tarea": "adios",
-        "fecha": "",
+        "tarea": "Hkia",
+        "fecha": "19/2/25",
         "completada": "Pendiente"
     },
     {
-        "tarea": "hola123",
-        "fecha": "18/2/25",
+        "tarea": "Peipito",
+        "fecha": "20/2/25",
         "completada": "Pendiente"
     },
     {
-        "tarea": "asdsad",
-        "fecha": "26/3/25",
-        "completada": "Pendiente"
-    },
-    {
-        "tarea": "asdasd",
-        "fecha": "",
+        "tarea": "pepeito",
+        "fecha": "21/2/25",
         "completada": "Pendiente"
     }
 ]
