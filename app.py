@@ -227,22 +227,7 @@ buttonAddTask.pack(padx=2, anchor="n", side="left")
 
 
 
-#Guardar correo:
-def guardar_correo():
-    correo = entryCorreo.get()
-    if correo:  
-        with open(info_ruta, "w") as file:
-            json.dump({"correo": correo}, file, indent=4)
 
-def cargar_correo():
-    if info_ruta.exists():
-        with open(info_ruta, "r") as file:
-            try:
-                data = json.load(file)
-                return data.get("correo", "")
-            except json.JSONDecodeError:
-                return ""
-    return ""
 
 #Config Frame
 def abrirConfig():
@@ -251,7 +236,7 @@ def abrirConfig():
     ventana_config.title("Configuracion")
     ventana_config.geometry("700x400")
     ventana_config.grab_set()
-    ventana_config.attributes("-topmost", True)
+    #ventana_config.attributes("-topmost", True)
     ventana_config.after(201, lambda: ventana_config.iconbitmap(configImage_ruta))
     labelconfig = customtkinter.CTkLabel(ventana_config, text="Configuracion:", fg_color="transparent", text_color="black", anchor="nw", font=("Catamaran", 20))
     labelconfig.pack(padx=4, pady=4, fill="x")
@@ -271,6 +256,23 @@ def abrirConfig():
     labelcorreo.pack(padx=4, pady=2, anchor="n")
 
     #Entry correo
+    #Guardar correo:
+    def guardar_correo():
+        correo = entryCorreo.get()
+        if correo:  
+            with open(info_ruta, "w") as file:
+                json.dump({"correo": correo}, file, indent=4)
+
+    def cargar_correo():
+        if info_ruta.exists():
+            with open(info_ruta, "r") as file:
+                try:
+                    data = json.load(file)
+                    return data.get("correo", "")
+                except json.JSONDecodeError:
+                    return ""
+        return ""
+
     entryCorreo = customtkinter.CTkEntry(frameAjustesDer, placeholder_text="ejemplo@ejemplo.com", width=200, font=("Catamaran", 12))
     entryCorreo.pack(pady=0)
 
