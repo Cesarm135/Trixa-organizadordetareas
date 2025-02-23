@@ -31,23 +31,25 @@ info_ruta = Path(__file__).parent / "Data" / "info.json"
 app.after(201, lambda: app.iconbitmap(icono_ruta))
 customtkinter.set_default_color_theme("green")
 
-# Variables de configuración para la tarea
+# Variables tarea
 config_tiempo = ""
 config_prioridad = ""
 fechaSeleccionadaTarea = ""
 
+# Label trixa
 label1 = customtkinter.CTkLabel(app, text="Trixa: Organizador de tareas", fg_color="transparent", 
                                 text_color="black", anchor="nw", font=("Catamaran", 25))
 label1.pack(padx=12, pady=12, fill="x", side="top")
 
+#Frame principal
 frameprincipal = customtkinter.CTkFrame(app)
 frameprincipal.pack(fill="both", expand=True, padx=10, pady=0, anchor="nw")
 
-# --- Frame de añadir tarea ---
+#Frame añadir tarea
 frameanadirtarea = customtkinter.CTkFrame(frameprincipal, fg_color="transparent")
 frameanadirtarea.pack(fill="x", padx=3, pady=3, anchor="nw")
 
-
+# Cargar tareas
 def cargarTareas():
     global tareas
     if os.path.exists(tareas_ruta):
@@ -56,6 +58,8 @@ def cargarTareas():
                 tareas = json.load(file)
             except json.JSONDecodeError:
                 tareas = []
+
+        # Obtener fecha tarea
         def obtener_fecha(tarea):
             try:
                 fecha_str = tarea["fecha"]
@@ -67,6 +71,7 @@ def cargarTareas():
                     return datetime.strptime(fecha_str, "%d/%m/%y")
             except (KeyError, ValueError):
                 return datetime(1900, 1, 1)
+        # Ordenar tareas
         if ordenar_combo.get() == "Ordenar por Tiempo/Prioridad":
             not_completed = [t for t in tareas if t["completada"] != "Completada"]
             completed = [t for t in tareas if t["completada"] == "Completada"]
@@ -83,6 +88,8 @@ def cargarTareas():
     else:
         tareas = []
 
+
+# Recarga interfaz
 def recargarInterfaz(*args):
     for widget in listaTareas.winfo_children():
         widget.destroy()
@@ -90,11 +97,11 @@ def recargarInterfaz(*args):
     for tarea in tareas:
         mostrarTarea(tarea["tarea"], tarea["completada"], tarea["fecha"], tarea.get("tiempo", ""), tarea.get("prioridad", ""))
 
-# Subframe para colocar todos los controles en una sola fila
+# Frame para que los botones queden bien
 frameAñadir = customtkinter.CTkFrame(frameanadirtarea, fg_color="transparent")
 frameAñadir.pack(fill="x", pady=5)
 
-# Imagen "Añadir"
+# Imagen de trixa izquierda
 addImage_ruta = Path(__file__).parent / "Media" / "icono.ico"
 addImage = customtkinter.CTkImage(light_image=Image.open(addImage_ruta),
                                   dark_image=Image.open(addImage_ruta),
@@ -102,12 +109,12 @@ addImage = customtkinter.CTkImage(light_image=Image.open(addImage_ruta),
 addImageLabel = customtkinter.CTkLabel(frameAñadir, image=addImage, text="")
 addImageLabel.pack(side="left", padx=2)
 
-# Entrada de texto para la tarea
+# Entrada para la tarea
 textotarea = customtkinter.CTkEntry(frameAñadir, placeholder_text="Escriba su tarea", 
                                     font=("Catamaran", 12), height=25, fg_color="transparent")
 textotarea.pack(side="left", padx=2)
 
-# Botón de calendario
+# Calendario
 image_rutaCalendario = Path(__file__).parent / "Media" / "calendario.png"
 imagenCalendario = customtkinter.CTkImage(light_image=Image.open(image_rutaCalendario),
                                           dark_image=Image.open(image_rutaCalendario),
@@ -151,7 +158,7 @@ button_calendario = customtkinter.CTkButton(frameAñadir, image=imagenCalendario
                                             command=calendario_boton, width=25)
 button_calendario.pack(side="left", padx=2)
 
-# Botón de configuración de tarea (para tiempo y prioridad)
+# Configuracion de la tarea
 image_rutaSettings = Path(__file__).parent / "Media" / "settings.png"
 imagenSettings = customtkinter.CTkImage(light_image=Image.open(image_rutaSettings),
                                         dark_image=Image.open(image_rutaSettings),
@@ -168,10 +175,6 @@ def abrir_configuracion():
     ventana_config.after(200, lambda: ventana_config.iconbitmap(icono_ruta))
     frame_superior = customtkinter.CTkFrame(ventana_config, fg_color="transparent")
     frame_superior.pack(padx=10, pady=10, fill="both", expand=True)
-
-    
-
-    # Labels en negrita y de mayor tamaño
     label_tiempo = customtkinter.CTkLabel(frame_superior, text="Tiempo necesario:", font=("Catamaran", 16, "bold"))
     label_tiempo.pack(pady=5)
     combo_horas = ttk.Combobox(frame_superior, values=["-"] + [f"{i} h" for i in range(0,9)],
@@ -189,8 +192,6 @@ def abrir_configuracion():
     combo_prioridad.pack(pady=2)
     combo_prioridad.current(0)
 
-    
-
     def guardar_config():
         global config_tiempo, config_prioridad, sel_min, sel_hora
         sel_hora = combo_horas.get()
@@ -204,7 +205,6 @@ def abrir_configuracion():
     combo_minutos.set(sel_min if sel_min else "-")
     combo_prioridad.set(config_prioridad if config_prioridad else "-")
 
-    # Botones "Hecho" y "Cancelar" para guardar o descartar
     frame_botones = customtkinter.CTkFrame(frame_superior, fg_color="transparent")
     frame_botones.pack(pady=10, fill="x")
     boton_hecho = customtkinter.CTkButton(frame_botones, text="Hecho", command=guardar_config, 
@@ -224,17 +224,18 @@ buttonAddTask = customtkinter.CTkButton(frameAñadir, text="Añadir Tarea", comm
                                         width=30, height=25, fg_color="lime green", font=("Catamaran", 12))
 buttonAddTask.pack(side="left", padx=2)
 
-# Desplegable de ordenación, colocado al extremo derecho de este mismo frame
+# Desplegable para seleccionar ordenamiento
 ordenar_combo = customtkinter.CTkComboBox(frameAñadir, values=["Ordenar por Completada", "Ordenar por Tiempo/Prioridad"],
                                            width=150, font=("Catamaran", 12), command=recargarInterfaz)
 ordenar_combo.set("Ordenar por Completada")
 ordenar_combo.pack(side="right", padx=5)
 
 
-# --- Área para listar tareas ---
+# Frame de tareas
 listaTareas = customtkinter.CTkScrollableFrame(frameprincipal, fg_color="transparent")
 listaTareas.pack(anchor="nw", fill="both", expand=True)
 
+# actualizar tarea (si esta seleccionada o no)
 def actualizarTarea(texto, checkbox):
     if os.path.exists(tareas_ruta):
         with open(tareas_ruta, "r") as file:
@@ -250,7 +251,7 @@ def actualizarTarea(texto, checkbox):
     recargarInterfaz()
 
 
-
+# Funcion para mostrar cada tarea con sus propiedades
 def mostrarTarea(texto, completada, fecha, tiempo, prioridad):
     tarea_frame = customtkinter.CTkFrame(listaTareas, fg_color="white", corner_radius=5)
     tarea_frame.pack(fill="x", pady=5, padx=10)
@@ -281,7 +282,7 @@ def mostrarTarea(texto, completada, fecha, tiempo, prioridad):
             info_label.pack(padx=4, pady=2)
         elif tiempo:
             info_text = tiempo
-            bg_color = "gray"  # Color gris si no hay prioridad
+            bg_color = "gray"  
             info_frame = customtkinter.CTkFrame(tarea_frame, fg_color=bg_color, corner_radius=5, height=5)
             info_frame.pack(side="left", padx=5)
             info_label = customtkinter.CTkLabel(info_frame, text=info_text, text_color="white", font=("Catamaran", 8), fg_color=bg_color)
@@ -289,6 +290,7 @@ def mostrarTarea(texto, completada, fecha, tiempo, prioridad):
         fecha_label = customtkinter.CTkLabel(tarea_frame, text=fecha, text_color="gray", font=("Catamaran", 8))
         fecha_label.pack(side="right", padx=10)
 
+# Funcion para añadir una tara a la lista y guardala en archivo
 def addTask():
     global fechaSeleccionadaTarea, config_tiempo, config_prioridad
     tareaAANadir = textotarea.get().strip()
@@ -348,6 +350,8 @@ def cargar_correo():
                 return "", "on"
     return "", "on"
 
+
+# Configuracion de la app
 def abrirConfig():
     global state_recordarcorreo
     configImage_ruta = Path(__file__).parent / "Media" / "config.ico"
@@ -380,6 +384,7 @@ def abrirConfig():
     entryCorreo.bind("<KeyRelease>", lambda event: guardar_correo())
     switch_recordarcorreo.configure(command=guardar_correo)
 
+# Gmail Credenciales
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 def obtener_credenciales():
     creds = None
@@ -395,8 +400,9 @@ def obtener_credenciales():
             token.write(creds.to_json())
     return creds
 
+#Funcion enviar correo
 def enviar_correo(destinatario, asunto, mensaje):
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b' #Verificar correo 
     if not re.match(regex, destinatario):
         print("Dirección de correo inválida.")
         return
@@ -412,6 +418,7 @@ def enviar_correo(destinatario, asunto, mensaje):
     except Exception as error:
         print(f"Error al enviar el correo: {error}")
 
+#Mirar que tareas tiene un plazo de 24h antes
 def verificar_tareas_para_correo():
     if cargar_correo()[1] == "off":
         print("El envío de correos está desactivado.")
@@ -437,6 +444,7 @@ def verificar_tareas_para_correo():
     with open(tareas_ruta, "w") as file:
         json.dump(tareas, file, indent=4)
 
+# Cada un tiempo mirar si hay alguna tarea
 def verificar_tareas_periodicamente():
     cargarTareas()
     verificar_tareas_para_correo()
@@ -445,14 +453,19 @@ def verificar_tareas_periodicamente():
     print("Verificado")
 verificar_tareas_periodicamente()
 
+# Frame de los botones de abajo
 frameBotones = customtkinter.CTkFrame(app, fg_color="transparent")
 frameBotones.pack(anchor="se", side="bottom")
+
+# Funcion para eliminar las tareas completadas
 def eliminarTareasCompletadas():
     global tareas
     tareas = [t for t in tareas if t["completada"] != "Completada"]
     with open(tareas_ruta, "w") as file:
         json.dump(tareas, file, indent=4)
     recargarInterfaz()
+
+#Boton de eliminar
 eliminarBoton = customtkinter.CTkButton(frameBotones, text="Borrar tareas completadas", command=eliminarTareasCompletadas,
                                          width=50, height=40, fg_color="red", font=("Catamaran", 15), text_color="white", hover_color="red4")
 eliminarBoton.pack(side="left", padx=5, pady=5)
